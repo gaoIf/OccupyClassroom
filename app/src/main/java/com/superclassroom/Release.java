@@ -7,14 +7,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.view.View.OnClickListener;
 import java.util.ArrayList;
 
 /**
@@ -22,9 +22,9 @@ import java.util.ArrayList;
  */
 
 public class Release extends Activity {
-    private MyDBHelper moh;
+    private ClassroomManager moh;
     private SQLiteDatabase sd;
-    private ArrayList<classroom> release_list;
+    private ArrayList<ClassroomData> release_list;
     private ListView lv;
     private Button mReleaseback;                      //返回按钮
     private Button mRelease;                     //占用按钮
@@ -36,7 +36,7 @@ public class Release extends Activity {
         setContentView(R.layout.release);
         Intent i = getIntent();
         tmpname = i.getStringExtra("user_name1");
-        moh = new MyDBHelper(this, "Classroom.db", null, 5);
+        moh = new ClassroomManager(this, "Classroom.db", null, 5);
         sd = moh.getReadableDatabase();
         release_list = new ArrayList<>();
         Cursor cursor = sd.rawQuery("select * from Classroom", null);
@@ -47,7 +47,7 @@ public class Release extends Activity {
             String stage = cursor.getString(cursor.getColumnIndex("stage"));
             String username = cursor.getString(cursor.getColumnIndex("username"));
             if (username.equals(tmpname)) {
-                classroom st = new classroom(name, stime,etime, stage, username);
+               ClassroomData st = new ClassroomData(name, stime,etime, stage, username);
                 release_list.add(st);
             }
         }
@@ -72,7 +72,7 @@ public class Release extends Activity {
                 }
 
                 //从studentlist中取出一行数据，position相当于数组下标,可以实现逐行取数据
-                classroom st = release_list.get(position);
+                ClassroomData st = release_list.get(position);
                 TextView name = (TextView) view.findViewById(R.id.room_name);
                 TextView time = (TextView) view.findViewById(R.id.room_time);
                 TextView stage = (TextView) view.findViewById(R.id.room_stage);
@@ -98,7 +98,7 @@ public class Release extends Activity {
         mReleaseback.setOnClickListener(mmm);
         mRelease.setOnClickListener(mmm);
     }
-///////////////////////////
+
     OnClickListener mmm = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -120,8 +120,8 @@ public class Release extends Activity {
                             ContentValues contentValues4 = new ContentValues();
                             contentValues1.put("stage","free");
                             contentValues2.put("stime", "null");
-                            contentValues3.put("username","");
-                            contentValues4.put("etime", "null");
+                            contentValues3.put("etime", "null");
+                            contentValues4.put("username","1");
                             String [] username1 = {username};
                             sd.update("Classroom",contentValues1,"username = ?",username1);
                             sd.update("Classroom",contentValues2,"username = ?",username1);

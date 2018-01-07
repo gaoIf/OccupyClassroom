@@ -37,7 +37,7 @@ public class Occupy extends AppCompatActivity {
     private EditText mOccupyClass;
     private Button mSureOccupy;
     private Button mOccupyBack;
-    private MyDBHelper dbHelper;
+    private ClassroomManager dbHelper;
     private SQLiteDatabase db1;
     private String tmpname;
     private Spinner mStarttime;
@@ -59,6 +59,7 @@ public class Occupy extends AppCompatActivity {
     private LinearLayout linearLayout2;
     private SortAadapter adapter1 = null;
     private SortAadapter adapter2 = null;
+    private String p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class Occupy extends AppCompatActivity {
         mSecurity = (EditText) findViewById(R.id.security);
         mOccupyBack.setOnClickListener(m_register_Listener);
         mSureOccupy.setOnClickListener(m_register_Listener);
-        dbHelper = new MyDBHelper(this, "Classroom.db", null, 5);
+        dbHelper = new ClassroomManager(this, "Classroom.db", null, 5);
         db1 = dbHelper.getWritableDatabase();
 
 
@@ -190,7 +191,9 @@ public class Occupy extends AppCompatActivity {
     /******************************************************************************下拉选项框模块*************************************************************************************************/
 
     private class SortAadapter extends ArrayAdapter {
-        private String[] strs = {"0", "1", "2", "3", "4", "5", "6"};
+        private String[] strs = {"0", "1", "2", "3", "4", "5", "6","7",
+                                    "8","9","10","11","12","13","14","15","16",
+                                    "17","18","19","20","21","22","23","24"};
         private LayoutInflater inflater;
         private int res;
 
@@ -235,7 +238,7 @@ public class Occupy extends AppCompatActivity {
             listPopupWindow1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                    Toast.makeText(getApplicationContext(), adapter1.getItem(pos), Toast.LENGTH_SHORT).show();
+
                     chooseText1.setText(adapter1.getItem(pos));
                     listPopupWindow1.dismiss();
                 }
@@ -269,7 +272,7 @@ public class Occupy extends AppCompatActivity {
             listPopupWindow2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                    Toast.makeText(getApplicationContext(), adapter1.getItem(pos), Toast.LENGTH_SHORT).show();
+
                     chooseText2.setText(adapter2.getItem(pos));
                     listPopupWindow2.dismiss();
                 }
@@ -340,7 +343,7 @@ public class Occupy extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.occupyback:
-                    Intent intent_Occupy_to_roomactivity = new Intent(Occupy.this, classroomactivity.class);
+                    Intent intent_Occupy_to_roomactivity = new Intent(Occupy.this, ClassroomActivity.class);
                     //Bundle bundle1 = new Bundle();
                     //bundle1.putString("name",tmpname);
                     //intent_Occupy_to_roomactivity.putExtras(bundle1);
@@ -357,9 +360,9 @@ public class Occupy extends AppCompatActivity {
                         String stime = cursor.getString(cursor.getColumnIndex("stime"));
                         String etime = cursor.getString(cursor.getColumnIndex("etime"));
                         if ((name.equals(ClassName)) && (stage.equals("free")) && (chooseText1.getText().toString().trim().compareTo(chooseText2.getText().toString().trim()) < 0)) {
+                            //if(mSecurity.getText().toString().trim().compareTo(p = String.valueOf(1))>0)
                             int k = testCheckPwdz201();
-                            // Toast.makeText(getApplicationContext(), k, Toast.LENGTH_SHORT).show()
-                            if (k == 0) {
+                            if(k == 0){
                                 ContentValues contentValues1 = new ContentValues();
                                 ContentValues contentValues2 = new ContentValues();
                                 ContentValues contentValues3 = new ContentValues();
@@ -374,24 +377,29 @@ public class Occupy extends AppCompatActivity {
                                 db1.update("Classroom", contentValues3, "name = ?", classname);
                                 db1.update("Classroom", contentValues4, "name = ?", classname);
                                 Toast.makeText(getApplicationContext(), "占用成功", Toast.LENGTH_SHORT).show();
+                                Intent intent_Occupy_to_roomactivity1 = new Intent(Occupy.this, ClassroomActivity.class);    //切换Login Activity至User Activity
+                                intent_Occupy_to_roomactivity1.putExtra("user_name1", tmpname);
+                                startActivity(intent_Occupy_to_roomactivity1);
+                                finish();
                                 break;
                             }
                             else{
-                                Toast.makeText(getApplication(), "占用失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"验证码错误",Toast.LENGTH_SHORT).show();
+                                mSecurity.setText("");
                             }
                         }
+
                         else if (name.equals(ClassName) && stage.equals("busy")) {
                             Toast.makeText(getApplicationContext(), "该教室已被使用", Toast.LENGTH_SHORT).show();///////////
                             break;
                         }
                     }
-                        Intent intent_Occupy_to_roomactivity1 = new Intent(Occupy.this, classroomactivity.class);    //切换Login Activity至User Activity
+
+
                         //Bundle bundle2 = new Bundle();
                         //bundle2.putString("name",tmpname);
                         //intent_Occupy_to_roomactivity1.putExtras(bundle2);
-                        intent_Occupy_to_roomactivity1.putExtra("user_name1", tmpname);
-                        startActivity(intent_Occupy_to_roomactivity1);
-                        finish();
+
                         break;
             }
         }
