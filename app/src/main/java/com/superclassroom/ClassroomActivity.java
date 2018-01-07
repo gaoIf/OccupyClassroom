@@ -1,5 +1,8 @@
 package com.superclassroom;
 
+/**
+ * Created by Timber on 2017/11/3.
+ */
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,18 +10,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.TextView;
-import android.view.View.OnClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
-public class classroomactivity extends Activity {
-    private MyDBHelper moh;
+public class ClassroomActivity extends Activity {
+    private ClassroomManager moh;
     private SQLiteDatabase sd;
-    private ArrayList<classroom> roomlist;
+    private ArrayList<ClassroomData> roomlist;
     private ListView lv;
     private Button mBackButton;                      //返回按钮
     private Button mOccupyButton;                     //占用按钮
@@ -31,9 +35,21 @@ public class classroomactivity extends Activity {
         Intent i = getIntent();
         tmpname = i.getStringExtra("user_name1");
         //创建或打开数据库
-        moh = new MyDBHelper(this, "Classroom.db", null, 5);
+        moh = new ClassroomManager(this, "Classroom.db", null, 5);
         sd = moh.getReadableDatabase();
         roomlist = new ArrayList<>();
+
+        /*if(k==1) {
+            sd = moh.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("name", "306-301");
+            values.put("stage", "free");
+            values.put("username", "1");
+            //insert（）方法中第一个参数是表名，第二个参数是表示给表中未指定数据的自动赋值为NULL。第三个参数是一个ContentValues对象
+            sd.insert("Classroom", null, values);
+            values.clear();
+            k = 0;
+        }*/
         //扫描数据库,将数据库信息放入roomlist
         Cursor cursor = sd.rawQuery("select * from Classroom", null);
         while (cursor.moveToNext()) {
@@ -42,7 +58,7 @@ public class classroomactivity extends Activity {
             int etime = cursor.getInt(cursor.getColumnIndex("etime"));
             String stage = cursor.getString(cursor.getColumnIndex("stage"));
             String username = cursor.getString(cursor.getColumnIndex("username"));
-            classroom st = new classroom(name, stime,etime, stage,username);    //student_info存一个条目的数据
+            ClassroomData st = new ClassroomData(name, stime,etime, stage,username);    //student_info存一个条目的数据
             roomlist.add(st);//把数据库的每一行加入数组中
         }
         //获取ListView,并通过Adapter把roomlist的信息显示到ListView
@@ -67,7 +83,7 @@ public class classroomactivity extends Activity {
                 }
 
                 //从roomlist中取出一行数据，position相当于数组下标,可以实现逐行取数据
-                classroom st = roomlist.get(position);
+                ClassroomData st = roomlist.get(position);
                 TextView name = (TextView) view.findViewById(R.id.room_name);
                 TextView time = (TextView) view.findViewById(R.id.room_time);
                 TextView stage = (TextView) view.findViewById(R.id.room_stage);
@@ -98,13 +114,13 @@ public class classroomactivity extends Activity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.roomback:                            //教室界面的返回按钮
-                    Intent intent_room_to_usercerter = new Intent(classroomactivity.this, UserCerter.class);    //切换Login Activity至User Activity
+                    Intent intent_room_to_usercerter = new Intent(ClassroomActivity.this, UserCerter.class);    //切换Login Activity至User Activity
                     intent_room_to_usercerter.putExtra("user_name0",tmpname);
                     startActivity(intent_room_to_usercerter);
                     finish();
                     break;
                 case R.id.occupy:                               //教室界面的占用按钮
-                    Intent intent_room_to_occupy = new Intent(classroomactivity.this, Occupy.class);
+                    Intent intent_room_to_occupy = new Intent(ClassroomActivity.this, Occupy.class);
                     //Bundle bundle1 = new Bundle();
                     //bundle1.putString("name",tmpname);
                     //intent_room_to_occupy.putExtras(bundle1);
@@ -114,6 +130,6 @@ public class classroomactivity extends Activity {
                     break;
 
             }
-        }
+            }
     };
 }
