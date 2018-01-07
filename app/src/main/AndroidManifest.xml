@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -22,8 +22,19 @@
             android:label="用户注册"/>
         <activity android:name=".Resetpwd"
             android:label="密码修改"></activity>
-        <activity android:name=".classroomactivity"
+        <activity android:name=".ClassroomActivity"
             android:label="教室信息"></activity>
+        <activity android:name=".Occupy"
+            android:label="占用教室"></activity>
+        <activity android:name=".UserCerter"
+            android:label="个人中心"></activity>
+        <activity android:name=".Release"
+            android:label="解除占用"></activity>
+        <activity android:name=".CourseSchedule"
+            android:label="我的课程表"></activity>
+        <activity android:name=".MainActivity"
+            android:label="我的课程表"></activity>
+        android:name="android.support.multidex.MultiDexApplication">
     </application>
 
 </manifest>
