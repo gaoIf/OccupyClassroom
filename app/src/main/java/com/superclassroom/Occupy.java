@@ -1,33 +1,32 @@
 package com.superclassroom;
 
-import android.database.Cursor;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ListPopupWindow;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.view.View.OnClickListener;
-import android.widget.Spinner;
-import android.widget.Toast;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-import mima.OTPVerify;
-import android.content.Context;
-import android.graphics.Color;
-import android.support.v7.widget.ListPopupWindow;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+import java.util.Map;
+
 import mima.OTPVerify;
 
 /**
@@ -90,19 +89,104 @@ public class Occupy extends AppCompatActivity {
         chooseText2 = (TextView) findViewById(R.id.chooseText2);
 
 
-        linearLayout1.setOnClickListener(new View.OnClickListener() {
+        linearLayout1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 showListPopupWindow1(linearLayout1);
             }
         });
-        linearLayout2.setOnClickListener(new View.OnClickListener() {
+        linearLayout2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 showListPopupWindow2(linearLayout2);
             }
         });
+        /*        原生Spanner
+        list1 = new ArrayList<Integer>();
+        list1.add(0);
+        list1.add(1);
+        list1.add(2);
+        list1.add(3);
+        list1.add(4);
+        list1.add(6);
+        list1.add(7);
+        list1.add(8);
+        list1.add(9);
+        list1.add(10);
+        list1.add(11);
+        list1.add(12);
+        list1.add(13);
+        list1.add(14);
+        list1.add(15);
+        list1.add(16);
+        list1.add(17);
+        list1.add(18);
+        list1.add(19);
+        list1.add(20);
+        list1.add(21);
+        list1.add(22);
+        list1.add(23);
+        list1.add(24);
+
+
+        list2 = new ArrayList<Integer>();
+        list2.add(0);
+        list2.add(1);
+        list2.add(2);
+        list2.add(3);
+        list2.add(4);
+        list2.add(6);
+        list2.add(7);
+        list2.add(8);
+        list2.add(9);
+        list2.add(10);
+        list2.add(11);
+        list2.add(12);
+        list2.add(13);
+        list2.add(14);
+        list2.add(15);
+        list2.add(16);
+        list2.add(17);
+        list2.add(18);
+        list2.add(19);
+        list2.add(20);
+        list2.add(21);
+        list2.add(22);
+        list2.add(23);
+        list2.add(24);
+
+        arr1 = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, list1);
+        arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mStarttime.setAdapter(arr1);
+
+        arr2 = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, list2);
+        arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mEndtime.setAdapter(arr2);
+
+        mStarttime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                list1sel = (int) mStarttime.getSelectedItem();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        mEndtime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                list2sel = (int) mEndtime.getSelectedItem();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });*/
     }
+
     /******************************************************************************下拉选项框模块*************************************************************************************************/
 
     private class SortAadapter extends ArrayAdapter {
@@ -213,7 +297,45 @@ public class Occupy extends AppCompatActivity {
         final float scale = sDensity;
         return (int) (dipValue * scale + 0.5f);
     }
-    OnClickListener m_register_Listener = new View.OnClickListener() {
+
+
+    /**********************************************************************************动态密码验证模块*****************************************************************************************************/
+
+
+    private int testCheckPwdz201() {
+        String seed = "llF9457D58DAD9A6CD9C646A58C229E5BACC62C5AFFAF56421";
+        String sOTP = mSecurity.getText().toString().trim();
+        Map hashMap;
+        // Scanner sc = new Scanner(System.in);
+        int iDrift = 0;
+        long lSucc = 0;
+        long nReturn;
+        int p = 0;
+
+        System.out.print("请输入教室密钥:");
+        if (!(sOTP.equals("quit"))) {
+
+            hashMap = OTPVerify.ET_CheckPwdz201(
+                    seed,                                    //令牌密钥
+                    System.currentTimeMillis() / 1000,        //调用本接口计算机的当前时间
+                    0,                                        //给0
+                    60,                                        //给60，因为每60秒变更新的动态口令
+                    iDrift,                                //漂移值，用于调整硬件与服务器的时间偏差，见手册说明
+                    20,                                        //认证窗口，见手册说明
+                    lSucc,                                    //成功值，用于调整硬件与服务器的时间偏差，见手册说明
+                    sOTP);                                    //要认证的动态口令OTP
+
+            nReturn = (long) hashMap.get("returnCode");
+            p = Integer.parseInt(String.valueOf(nReturn));
+        }
+
+        return p;
+    }
+
+
+    /***************************************************************************************************************************************************************************************/
+
+    OnClickListener m_register_Listener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -235,9 +357,9 @@ public class Occupy extends AppCompatActivity {
                         String stime = cursor.getString(cursor.getColumnIndex("stime"));
                         String etime = cursor.getString(cursor.getColumnIndex("etime"));
                         if ((name.equals(ClassName)) && (stage.equals("free")) && (chooseText1.getText().toString().trim().compareTo(chooseText2.getText().toString().trim()) < 0)) {
-                       /*     int k = testCheckPwdz201();
+                            int k = testCheckPwdz201();
                             // Toast.makeText(getApplicationContext(), k, Toast.LENGTH_SHORT).show()
-                            if (k == 0) {*/
+                            if (k == 0) {
                                 ContentValues contentValues1 = new ContentValues();
                                 ContentValues contentValues2 = new ContentValues();
                                 ContentValues contentValues3 = new ContentValues();
@@ -258,20 +380,22 @@ public class Occupy extends AppCompatActivity {
                                 Toast.makeText(getApplication(), "占用失败", Toast.LENGTH_SHORT).show();
                             }
                         }
-                        if (name.equals(ClassName) && stage.equals("busy")) {
+                        else if (name.equals(ClassName) && stage.equals("busy")) {
                             Toast.makeText(getApplicationContext(), "该教室已被使用", Toast.LENGTH_SHORT).show();///////////
                             break;
                         }
                     }
-                    Intent intent_Occupy_to_roomactivity1 = new Intent(Occupy.this, classroomactivity.class);    //切换Login Activity至User Activity
-                    //Bundle bundle2 = new Bundle();
-                    //bundle2.putString("name",tmpname);
-                    //intent_Occupy_to_roomactivity1.putExtras(bundle2);
-                    intent_Occupy_to_roomactivity1.putExtra("user_name1", tmpname);
-                    startActivity(intent_Occupy_to_roomactivity1);
-                    finish();
-                    break;
+                        Intent intent_Occupy_to_roomactivity1 = new Intent(Occupy.this, classroomactivity.class);    //切换Login Activity至User Activity
+                        //Bundle bundle2 = new Bundle();
+                        //bundle2.putString("name",tmpname);
+                        //intent_Occupy_to_roomactivity1.putExtras(bundle2);
+                        intent_Occupy_to_roomactivity1.putExtra("user_name1", tmpname);
+                        startActivity(intent_Occupy_to_roomactivity1);
+                        finish();
+                        break;
             }
         }
     };
 }
+
+
