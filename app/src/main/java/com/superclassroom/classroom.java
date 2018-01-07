@@ -6,25 +6,28 @@ package com.superclassroom;
 
 public class classroom {
     private String name;
-    private String time;
+    private int stime;
+    private int etime;
     private String stage;
+    private String username;
     public String getName()
     {
         return name;
     }
-    public String getTime()
-    {
-        return time;
-    }
+    public int getStime() { return stime;}
+    public int getEtime() { return etime; }
     public String getStage()
     {
         return stage;
     }
-    public classroom(String name, String time, String stage) {
+    public String getUsername(){ return username;  }
+    public classroom(String name, int stime,int etime, String stage,String username) {
         super();
         this.name = name;
-        this.time = time;
+        this.stime = stime;
+        this.etime = etime;
         this.stage = stage;
+        this.username = username;
     }
 
 
