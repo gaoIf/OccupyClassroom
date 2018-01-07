@@ -101,7 +101,7 @@ public class CourseSchedule extends Activity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.courseback:                            //教室界面的返回按钮
-                        Intent intent_course_to_usercerter = new Intent(CourseSchedule.this, User.class);    //切换Login Activity至User Activity
+                        Intent intent_course_to_usercerter = new Intent(CourseSchedule.this, UserCerter.class);    //切换Login Activity至User Activity
                         intent_course_to_usercerter.putExtra("user_name0", tmpname);
                         startActivity(intent_course_to_usercerter);
                         finish();

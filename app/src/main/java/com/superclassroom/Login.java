@@ -123,9 +123,10 @@ public class Login extends Activity {                 //登录界面活动
                 }
                 editor.commit();
 
-                Intent classroomactivity = new Intent(Login.this, classroomactivity.class);    //切换Login Activity至User Activity
-                startActivity(classroomactivity);
-                finish();
+                Intent intent_login_to_usercerter = new Intent(Login.this, UserCerter.class);    //切换Login Activity至User Activity
+                intent_login_to_usercerter.putExtra("user_name0",userName);
+                startActivity(intent_login_to_usercerter);
+
                 Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();//登录成功提示
             } else if (result == 0) {
                 Toast.makeText(this,"登录失败！请输入正确的用户名密码", Toast.LENGTH_SHORT).show();  //登录失败提示

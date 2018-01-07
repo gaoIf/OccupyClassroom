@@ -10,7 +10,7 @@ import android.widget.Toast;
  */
 
 public  class CourseManager extends SQLiteOpenHelper {
-    //定义一个创建表Book的SQLite语句
+
     private static final String CREATE_Course = "create table Course("
             + "id integer primary key autoincrement, "
             + "weektime text, "
