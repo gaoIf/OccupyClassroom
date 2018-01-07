@@ -30,7 +30,7 @@ public class CourseData {
     public String getCourse4() {
         return course4;
     }
-    public CourseData(String weektime,String course1,String course2,String course3,String course4)
+    public CourseData(String weektime, String course1, String course2, String course3, String course4)
     {
         super();
         this.weektime=weektime;
